@@ -25,7 +25,7 @@ import java.nio.charset.Charset;
 import java.util.EnumSet;
 import java.util.Set;
 
-final class CodecUtils {
+public final class CodecUtils {
 
 	static final int NULL_VALUE = 0xfb;
 	static final int SHORT_VALUE = 0xfc;
@@ -36,12 +36,12 @@ final class CodecUtils {
 		// Non-instantiable
 	}
 
-	static long readLengthEncodedInteger(ByteBuf buf) {
+	public static long readLengthEncodedInteger(ByteBuf buf) {
 		return readLengthEncodedInteger(buf, buf.readUnsignedByte());
 	}
 
 	// https://dev.mysql.com/doc/internals/en/integer.html
-	static long readLengthEncodedInteger(ByteBuf buf, int firstByte) {
+	public static long readLengthEncodedInteger(ByteBuf buf, int firstByte) {
 		firstByte = firstByte & 0xff;
 		if (firstByte < NULL_VALUE) {
 			return firstByte;
@@ -74,7 +74,7 @@ final class CodecUtils {
 //        return readFixedLengthString(buf, (int) length, charset);
 //    }
 //
-	static AsciiString readNullTerminatedString(ByteBuf buf) {
+	public static AsciiString readNullTerminatedString(ByteBuf buf) {
 		final int len = findNullTermLen(buf);
 		if (len < 0) {
 			return null;
@@ -84,7 +84,7 @@ final class CodecUtils {
 		return s;
 	}
 
-	static String readNullTerminatedString(ByteBuf buf, Charset charset) {
+	public static String readNullTerminatedString(ByteBuf buf, Charset charset) {
 		final int len = findNullTermLen(buf);
 		if (len < 0) {
 			return null;
@@ -94,7 +94,7 @@ final class CodecUtils {
 		return s;
 	}
 
-	static int findNullTermLen(ByteBuf buf) {
+	public static int findNullTermLen(ByteBuf buf) {
 		final int termIdx = buf.indexOf(buf.readerIndex(), buf.capacity(), (byte) 0);
 		if (termIdx < 0) {
 			return -1;
@@ -102,13 +102,13 @@ final class CodecUtils {
 		return termIdx - buf.readerIndex();
 	}
 
-	static AsciiString readFixedLengthString(ByteBuf buf, int len) {
+	public static AsciiString readFixedLengthString(ByteBuf buf, int len) {
 		final byte[] bytes = new byte[len];
 		buf.readBytes(bytes);
 		return new AsciiString(bytes);
 	}
 
-	static String readFixedLengthString(ByteBuf buf, int length, Charset charset) {
+	public static String readFixedLengthString(ByteBuf buf, int length, Charset charset) {
 		if (length < 0) {
 			return null;
 		}
@@ -117,25 +117,25 @@ final class CodecUtils {
 		return s;
 	}
 
-	static String readLengthEncodedString(ByteBuf buf, Charset charset) {
+	public static String readLengthEncodedString(ByteBuf buf, Charset charset) {
 		final long len = readLengthEncodedInteger(buf);
 		return readFixedLengthString(buf, (int) len, charset);
 	}
 
-	static String readLengthEncodedString(ByteBuf buf, int firstByte, Charset charset) {
+	public static String readLengthEncodedString(ByteBuf buf, int firstByte, Charset charset) {
 		final long len = readLengthEncodedInteger(buf, firstByte);
 		return readFixedLengthString(buf, (int) len, charset);
 	}
 
-	static <E extends Enum<E>> EnumSet<E> readShortEnumSet(ByteBuf buf, Class<E> enumClass) {
+	public static <E extends Enum<E>> EnumSet<E> readShortEnumSet(ByteBuf buf, Class<E> enumClass) {
 		return toEnumSet(enumClass, buf.readUnsignedShortLE());
 	}
 
-	static <E extends Enum<E>> EnumSet<E> readIntEnumSet(ByteBuf buf, Class<E> enumClass) {
+	public static <E extends Enum<E>> EnumSet<E> readIntEnumSet(ByteBuf buf, Class<E> enumClass) {
 		return toEnumSet(enumClass, buf.readUnsignedIntLE());
 	}
 
-	static <E extends Enum<E>> EnumSet<E> toEnumSet(Class<E> enumClass, long vector) {
+	public static <E extends Enum<E>> EnumSet<E> toEnumSet(Class<E> enumClass, long vector) {
 		EnumSet<E> set = EnumSet.noneOf(enumClass);
 		for (E e : enumClass.getEnumConstants()) {
 			final long mask = 1 << e.ordinal();
@@ -156,7 +156,7 @@ final class CodecUtils {
 //        return enumConstants[i];
 //    }
 
-	static <E extends Enum<E>> long toLong(Set<E> set) {
+	public static <E extends Enum<E>> long toLong(Set<E> set) {
 		long vector = 0;
 		for (E e : set) {
 			if (e.ordinal() >= Long.SIZE) {
@@ -167,7 +167,7 @@ final class CodecUtils {
 		return vector;
 	}
 
-	static void writeLengthEncodedInt(ByteBuf buf, Long n) {
+	public static void writeLengthEncodedInt(ByteBuf buf, Long n) {
 		if (n == null) {
 			buf.writeByte(NULL_VALUE);
 		} else if (n < 0) {
@@ -186,7 +186,7 @@ final class CodecUtils {
 		}
 	}
 
-	static void writeLengthEncodedString(ByteBuf buf, CharSequence sequence, Charset charset) {
+	public static void writeLengthEncodedString(ByteBuf buf, CharSequence sequence, Charset charset) {
 		final ByteBuf tmpBuf = Unpooled.buffer();
 		try {
 			tmpBuf.writeCharSequence(sequence, charset);
@@ -197,7 +197,7 @@ final class CodecUtils {
 		}
 	}
 
-	static void writeNullTerminatedString(ByteBuf buf, CharSequence sequence, Charset charset) {
+	public static void writeNullTerminatedString(ByteBuf buf, CharSequence sequence, Charset charset) {
 		if (sequence != null) {
 			buf.writeCharSequence(sequence, charset);
 		}
