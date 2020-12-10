@@ -53,9 +53,14 @@ public enum Command {
 
 	// Stored procedures
 	COM_SET_OPTION(0x1b),
-	COM_STMT_FETCH(0x1c);
+	COM_STMT_FETCH(0x1c),
 
-	// TODO Add replication protocol commands
+	// Replication protocol
+	COM_BINLOG_DUMP(0x12),
+	COM_BINLOG_DUMP_GTID(0x1e),
+	COM_TABLE_DUMP(0x13),
+	COM_CONNECT_OUT(0x14),
+	COM_REGISTER_SLAVE(0x15);
 
 	private final int commandCode;
 
