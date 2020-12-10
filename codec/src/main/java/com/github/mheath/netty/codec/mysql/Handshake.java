@@ -18,6 +18,7 @@ package com.github.mheath.netty.codec.mysql;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.DefaultByteBufHolder;
+import io.netty.channel.ChannelHandlerContext;
 import io.netty.util.AsciiString;
 
 import java.util.Collection;
@@ -168,5 +169,10 @@ public class Handshake extends DefaultByteBufHolder implements MysqlServerPacket
 		public Handshake build() {
 			return new Handshake(this);
 		}
+	}
+
+	@Override
+	public void accept(MysqlServerPacketVisitor visitor, ChannelHandlerContext ctx) {
+		visitor.visit(this, ctx);
 	}
 }
