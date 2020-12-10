@@ -16,6 +16,8 @@
 
 package com.github.mheath.netty.codec.mysql;
 
+import io.netty.channel.ChannelHandlerContext;
+
 /**
  * This packet indicates that an error occurred.
  */
@@ -44,4 +46,8 @@ public class ErrorResponse extends AbstractMySqlPacket implements MysqlServerPac
 		return message;
 	}
 
+	@Override
+	public void accept(MysqlServerPacketVisitor visitor, ChannelHandlerContext ctx) {
+		visitor.visit(this, ctx);
+	}
 }

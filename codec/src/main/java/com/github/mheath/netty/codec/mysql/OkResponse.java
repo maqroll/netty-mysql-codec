@@ -16,6 +16,8 @@
 
 package com.github.mheath.netty.codec.mysql;
 
+import io.netty.channel.ChannelHandlerContext;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -133,5 +135,10 @@ public class OkResponse extends AbstractMySqlPacket implements MysqlServerPacket
 		public OkResponse build() {
 			return new OkResponse(this);
 		}
+	}
+
+	@Override
+	public void accept(MysqlServerPacketVisitor visitor, ChannelHandlerContext ctx) {
+		visitor.visit(this, ctx);
 	}
 }

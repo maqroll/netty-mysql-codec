@@ -16,6 +16,8 @@
 
 package com.github.mheath.netty.codec.mysql;
 
+import io.netty.channel.ChannelHandlerContext;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -48,4 +50,10 @@ public class EofResponse extends AbstractMySqlPacket implements MysqlServerPacke
 	public Set<ServerStatusFlag> getStatusFlags() {
 		return statusFlags;
 	}
+
+	@Override
+	public void accept(MysqlServerPacketVisitor visitor, ChannelHandlerContext ctx) {
+		visitor.visit(this, ctx);
+	}
+
 }
