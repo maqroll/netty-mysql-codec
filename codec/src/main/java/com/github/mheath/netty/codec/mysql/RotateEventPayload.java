@@ -1,6 +1,6 @@
 package com.github.mheath.netty.codec.mysql;
 
-public class RotateEventPayload {
+public class RotateEventPayload implements ReplicationEventPayload {
   private final long pos;
   private final String filename;
 
