@@ -21,6 +21,7 @@ import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.CodecException;
 import io.netty.util.AsciiString;
 
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.EnumSet;
 import java.util.Set;
@@ -165,6 +166,19 @@ public final class CodecUtils {
 			vector |= 1L << e.ordinal();
 		}
 		return vector;
+	}
+
+	public static long readUnsignedLongLE(ByteBuf buf, int length) {
+			long result = 0;
+
+			if (length > 7 || length < 5) {
+				throw new IllegalArgumentException("length in readUnsignedLongLE should be between 5 and 7");
+			}
+
+			for (int i = 0; i < length; ++i) {
+				result |= (((long) buf.readUnsignedByte()) << (i << 3));
+			}
+			return result;
 	}
 
 	public static void writeLengthEncodedInt(ByteBuf buf, Long n) {
