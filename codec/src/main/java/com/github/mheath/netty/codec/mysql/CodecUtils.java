@@ -168,6 +168,19 @@ public final class CodecUtils {
 		return vector;
 	}
 
+	public static long readUnsignedLongLE6(ByteBuf buf) {
+		long result = 0;
+
+		result |= buf.readUnsignedByte(); /* TODO check */
+		result |= (((long) buf.readUnsignedByte()) << 8);
+		result |= (((long) buf.readUnsignedByte()) << 16);
+		result |= (((long) buf.readUnsignedByte()) << 24);
+		result |= (((long) buf.readUnsignedByte()) << 32);
+		result |= (((long) buf.readUnsignedByte()) << 40);
+
+		return result;
+	}
+
 	public static long readUnsignedLongLE(ByteBuf buf, int length) {
 			long result = 0;
 
